@@ -1,0 +1,140 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-input/paper-textarea.html" />
+<link rel="import" href="../paper-button/paper-button.html" />
+
+<!--
+`speech-input`
+an element which takes speech and turns it into text
+
+@demo demo/index.html
+-->
+
+<dom-module id="speech-input">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <paper-textarea value="{{interimValue}}" label="interimValue"></paper-textarea>
+    <paper-textarea value="{{speechValue}}" label="result"></paper-textarea>
+    <paper-button on-tap="startSpeech">let me talk</paper-button>
+    <paper-button on-tap="endSpeech">stop listening</paper-button>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'speech-input',
+
+      ready: function() {
+        this.recognition.interimResults = true;
+        this.setupListListeners();
+      },
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'speech-input',
+        },
+
+        recognition: {
+          type: Object,
+          value: window.speechRecognition ? new speechRecognition : new webkitSpeechRecognition()
+        },
+
+        utterance: {
+          type: Object,
+          value: new SpeechSynthesisUtterance()
+        },
+
+        speechValue: {
+          type: String,
+          value: ''
+        }
+      },
+
+      startSpeech: function() {
+        this.recognition.addEventListener("end", this.recognition.start);
+        this.recognition.start();
+      },
+
+      endSpeech: function() {
+        this.recognition.removeEventListener("end", this.recognition.start);
+        this.recognition.stop();
+      },
+
+      setupListListeners: function() {
+        this.recognition.addEventListener("result", e => {
+          //console.log(e.results);
+          this.transcript = Array.from(e.results)
+            .map(result => result[0])
+            .map(result => result.transcript)
+            .join("");
+          console.log('before: ' + this.confidence);
+          if(!this.confidence) {
+            this.speechValue = '';
+          };
+          this.interimValue = this.transcript;
+          if(e.results[0].isFinal) {
+            this.confidence = Array.from(e.results)
+              .map(result => result[0])
+              .map(result => result.confidence)
+              .every(conf => {
+                return conf >= .70;
+              });
+              console.log('after: ' + this.confidence);
+            if(this.confidence >= .70) {
+              this.commandPresent = false;
+              this.checkCommands(this.transcript);
+              if(!this.commandPresent) {
+                this.speechValue += ' ' + this.transcript;
+                this.interimValue = '';
+              };
+            } else {
+              this.speechValue = 'Could not understand';
+            };
+          };
+        });
+      },
+
+      checkCommands: function(transcript) {
+        switch(true) {
+          case transcript.includes('delete text'):
+            this.deleteText();
+            this.commandPresent = true;
+            break;
+          case transcript.includes('read back text'):
+            this.readText();
+            this.commandPresent = true;
+            break;
+          case transcript.includes('stop reading text'):
+            this.stopReading();
+            this.commandPresent = true;
+            break;
+          default:
+            this.commandPresent = false;
+            break;
+        };
+      },
+
+      deleteText: function() {
+        this.speechValue = '';
+        console.log("delete text function running");
+      },
+
+      readText: function() {
+        speechSynthesis.cancel();
+        this.utterance.text = this.speechValue;
+        speechSynthesis.speak(this.utterance)
+        console.log("read text function running");
+      },
+
+      stopReading: function() {
+        speechSynthesis.cancel();
+        console.log('stopping reading of text');
+      }
+
+    });
+  </script>
+</dom-module>
