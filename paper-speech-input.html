@@ -9,7 +9,7 @@ an element which takes speech and turns it into text
 @demo demo/index.html
 -->
 
-<dom-module id="speech-input">
+<dom-module id="paper-speech-input">
   <template>
     <style>
       :host {
@@ -25,7 +25,7 @@ an element which takes speech and turns it into text
   <script>
     Polymer({
 
-      is: 'speech-input',
+      is: 'paper-speech-input',
 
       ready: function() {
         this.recognition.interimResults = true;
@@ -111,7 +111,7 @@ an element which takes speech and turns it into text
       checkCommands: function(transcript) {
         switch(true) {
           case transcript.includes('delete text'):
-            this.deleteText(); 
+            this.deleteText();
             this.commandPresent = true;
             break;
           case transcript.includes('read back text'):
