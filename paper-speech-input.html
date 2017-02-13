@@ -33,37 +33,46 @@ an element which takes speech and turns it into text
       },
 
       properties: {
-        prop1: {
-          type: String,
-          value: 'speech-input',
-        },
 
+        //new instance of the browser's speechRecognition object.
         recognition: {
           type: Object,
           value: window.speechRecognition ? new speechRecognition : new webkitSpeechRecognition()
         },
 
+        // new instance of SpeechSynthesisUtterance. used to read back text to the user.
         utterance: {
           type: Object,
           value: new SpeechSynthesisUtterance()
         },
 
+        //the cumulative result of speech from the user. shows in paper-textarea.
         speechValue: {
           type: String,
           value: ''
+        },
+
+        //the current utternace displayed in real time as the user speaks. will not be added if recognition confidence is below 70%.
+        interimValue: {
+          type: String,
+          value: ''
         }
+
       },
 
+      //start event listeners for end on recognition object
       startSpeech: function() {
         this.recognition.addEventListener("end", this.recognition.start);
         this.recognition.start();
       },
 
+      //remove event listeners on recognition object
       endSpeech: function() {
         this.recognition.removeEventListener("end", this.recognition.start);
         this.recognition.stop();
       },
 
+      //create listeners for 'result' from recognition object. set speechValue and interimValue. check for voice commands.
       setupListListeners: function() {
         this.recognition.addEventListener("result", e => {
           //console.log(e.results);
@@ -98,10 +107,11 @@ an element which takes speech and turns it into text
         });
       },
 
+      //check for voice commands if recognition confidence is over 70. if present text is not added to speechValue and instead executes associated function.
       checkCommands: function(transcript) {
         switch(true) {
           case transcript.includes('delete text'):
-            this.deleteText();
+            this.deleteText(); 
             this.commandPresent = true;
             break;
           case transcript.includes('read back text'):
@@ -118,11 +128,13 @@ an element which takes speech and turns it into text
         };
       },
 
+      //speech enabled command. sets speechValue to ''
       deleteText: function() {
         this.speechValue = '';
         console.log("delete text function running");
       },
 
+      //speech enabled command. reads back text using utterance object
       readText: function() {
         speechSynthesis.cancel();
         this.utterance.text = this.speechValue;
@@ -130,6 +142,7 @@ an element which takes speech and turns it into text
         console.log("read text function running");
       },
 
+      //spech enabled command. stops utterance obect from speaking if currently speaking.
       stopReading: function() {
         speechSynthesis.cancel();
         console.log('stopping reading of text');
