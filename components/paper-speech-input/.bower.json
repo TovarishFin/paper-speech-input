@@ -1,0 +1,30 @@
+{
+  "name": "paper-speech-input",
+  "description": "&#39;an element which takes speech and turns it into text&#39;",
+  "main": "paper-speech-input.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "paper-input": "PolymerElements/paper-input#^1.1.23",
+    "paper-button": "PolymerElements/paper-button#^1.0.14",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "homepage": "https://github.com/tovarishfin/paper-speech-input",
+  "_release": "fc515a1634",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "fc515a163470fa8058999f8e49779ea4b7da8bb3"
+  },
+  "_source": "https://github.com/tovarishfin/paper-speech-input.git",
+  "_target": "master",
+  "_originalSource": "tovarishfin/paper-speech-input",
+  "_direct": true
+}
