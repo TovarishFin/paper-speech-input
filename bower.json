@@ -1,7 +1,7 @@
 {
-  "name": "speech-input",
+  "name": "paper-speech-input",
   "description": "&#39;an element which takes speech and turns it into text&#39;",
-  "main": "speech-input.html",
+  "main": "paper-speech-input.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
     "paper-input": "PolymerElements/paper-input#^1.1.23",
